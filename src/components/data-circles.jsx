@@ -3,10 +3,10 @@ import React from 'react';
 const renderCircles = (props) => {
   return (coords, index) => {
     const circleProps = {
-      cx: props.xScale(coords[0]),
-      cy: props.yScale(coords[2]),
+      cx: props.xScale(coords.xValue),
+      cy: props.yScale(coords.mean),
       r: 5,
-      fill: coords[4],
+      fill: coords.colour,
       key: index
     };
     return <circle {...circleProps} />;

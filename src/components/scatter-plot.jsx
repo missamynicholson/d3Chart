@@ -4,21 +4,23 @@ import DataCircles      from './data-circles';
 import DataLimitsLower  from './data-limits-lower';
 import DataLimitsUpper  from './data-limits-upper';
 import DataDashedLine   from './data-dashed-line';
+import DataShadedRect   from './data-shaded-rect';
 import XYAxis           from './x-y-axis';
+import AxisLabels       from './axis-labels';
 
-const xMax   = (data)  => d3.max(data, (d) => d[0]);
-const yMax   = (data)  => d3.max(data, (d) => d[3]);
-
+const xMax   = (data)  => d3.max(data, (d) => d.xValue);
+const yMax   = (data)  => d3.max(data, (d) => d.confidenceUpper);
+const yMin   = (data)  => d3.min(data, (d) => d.confidenceLower);
 
 const xScale = (props) => {
   return d3.scale.linear()
-    .domain([0, xMax(props.data) * 1.2])
+    .domain([0, xMax(props.data) * 1.5])
     .range([props.padding, props.width - props.padding * 2]);
 };
 
 const yScale = (props) => {
   return d3.scale.linear()
-    .domain([0, yMax(props.data)])
+    .domain([yMin(props.data), yMax(props.data)])
     .range([props.height - props.padding, props.padding]);
 };
 
@@ -27,6 +29,7 @@ const marshalProps = (props) => {
   return Object.assign({}, props, scales);
 };
 
+//<DataShadedRect {...d3Props}  />
 export default (props) => {
   const d3Props = marshalProps(props);
   return <svg width={d3Props.width} height={d3Props.height}>
@@ -35,5 +38,7 @@ export default (props) => {
     <DataLimitsUpper {...d3Props} />
     <DataDashedLine {...d3Props} />
     <XYAxis {...d3Props}/>
-  </svg>
+    <text y="10" x="-300" stroke="#0000" transform="rotate(-90)">{props.testName}</text>
+    <AxisLabels {...d3Props} />
+    </svg>
 }
